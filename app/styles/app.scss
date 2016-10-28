@@ -1,0 +1,19 @@
+@import "font-awesome";
+@import "pod-styles";
+
+body {
+  font-size: 125%;
+  background: #f5f5f5;
+  margin: 0;
+  position: relative;
+  width: 100vw;
+  min-height: 100%;
+}
+
+$orange: #ff5f00;
+$dropbox-blue: rgb(68, 169, 210);
+$header-bg: rgb(245, 246, 247);
+
+a {
+  color: $dropbox-blue;
+}

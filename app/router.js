@@ -7,6 +7,12 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+  this.route('simple');
+  this.route('login');
+  this.route('email', function() {
+    this.route('single', { path: ':id' });
+    this.route('compose');
+  });
 });
 
 export default Router;

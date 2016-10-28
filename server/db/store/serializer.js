@@ -121,13 +121,37 @@ Serializer.prototype.normalizeOne = function normalizeOne(record) {
   return values;
 };
 
+Serializer.prototype._stripIncludes = function _stripIncludes(ret, query) {
+  var allowedIncludes = query && query.included ? query.included.split(',') : [];
+
+  if (!allowedIncludes.length) {
+    delete ret.included;
+  } else {
+    var finalIncludes = [];
+    var seen = {};
+
+    for (var i = 0, inc = ret.included, l = inc.length; i < l; i++) {
+      var r = inc[i];
+      seen[r.type] = seen[r.type]|| {};
+      if (seen[r.type][r.id]) {
+        continue;
+      }
+      seen[r.type][r.id] = true;
+
+      if (allowedIncludes.indexOf(r.type) !== -1) {
+        finalIncludes.push(r);
+      }
+    }
+    ret.included = finalIncludes;
+  }
+};
+
 Serializer.prototype.serializeMany = function serializeMany(records, query) {
   var _this = this;
   var ret = {
     data: [],
     included: []
   };
-  var allowedIncludes = query.included.split(',') || [];
 
   records.forEach(function(record) {
     var serialized = _this.serializeOne(record);
@@ -136,18 +160,7 @@ Serializer.prototype.serializeMany = function serializeMany(records, query) {
     ret.included = ret.included.concat(serialized.included);
   });
 
-  if (!allowedIncludes.length) {
-    delete ret.included;
-  } else {
-    var finalIncludes = [];
-
-    for (var i = 0, inc = ret.included, l = inc.length; i < l; i++) {
-      if (allowedIncludes.indexOf(inc[i].type) !== -1) {
-        finalIncludes.push(inc[i]);
-      }
-    }
-    ret.included = finalIncludes;
-  }
+  this._stripIncludes(ret, query);
 
   return validateJsonApi(ret);
 };

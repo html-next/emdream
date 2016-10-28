@@ -1,0 +1,15 @@
+<ul>
+  {{#each emails as |email|}}
+    <li>
+        {{#link-to 'email.single' email}}
+          <h2>{{email.title}}</h2>
+          <h3>{{email.from}}</h3>
+          <p>{{email.previewText}}</p>
+        {{/link-to}}
+    </li>
+  {{else}}
+    <li>
+        <h2>You have no conversations.</h2>
+    </li>
+  {{/each}}
+</ul>

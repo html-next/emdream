@@ -2,6 +2,7 @@
 
 module.exports = function(environment) {
   var ENV = {
+    podModulePrefix: 'emdream/routes',
     modulePrefix: 'emdream',
     environment: environment,
     rootURL: null,
